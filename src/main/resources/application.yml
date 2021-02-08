@@ -1,0 +1,13 @@
+server:
+  port: 8080
+
+jdbc:
+  master:
+    driver-class-name: org.gjt.mm.mysql.Driver
+    url: jdbc:mysql://47.105.41.180:3306/insurance?serverTimezone=UTC&useSSL=false
+    username: root
+    password: 123456
+
+mybatis:
+  mapper-locations: classpath:mybatis/*.xml
+  type-aliases-package: com.insurance.business.model
