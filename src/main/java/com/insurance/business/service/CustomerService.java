@@ -5,4 +5,27 @@ import com.insurance.business.model.CustomerModelExample;
 import com.springboot.simple.jdbc.service.BaseService;
 
 public interface CustomerService extends BaseService<CustomerModel, CustomerModelExample> {
+
+    /**
+     * 通过的登陆名查询用户
+     * @param loginName
+     * @return
+     */
+    CustomerModel selectByLoginName(String loginName);
+
+    /**
+     * 用户注册
+     * @param loginName
+     * @param password
+     * @param phone
+     */
+    void register(String loginName, String password, String phone);
+
+    /**
+     * 登陆
+     * @param loginName
+     * @param password
+     * @return
+     */
+    CustomerModel login(String loginName, String password);
 }
