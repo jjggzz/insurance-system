@@ -22,7 +22,7 @@ create table t_customer_certification_info (
    modified_time datetime not null ,
    deleted boolean default 0 not null ,
    access_key bigint unique not null comment '业务id',
-   customer_id bigint not null comment '客户id',
+   customer_id bigint unique not null comment '客户id',
    name varchar(10) not null comment '姓名',
    birthday datetime not null comment '生日',
    identity_number varchar(18) not null comment '身份证号',

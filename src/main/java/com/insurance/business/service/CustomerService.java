@@ -1,8 +1,11 @@
 package com.insurance.business.service;
 
+import com.insurance.business.dto.CertificationDto;
 import com.insurance.business.model.CustomerModel;
 import com.insurance.business.model.CustomerModelExample;
 import com.springboot.simple.jdbc.service.BaseService;
+
+import java.io.IOException;
 
 public interface CustomerService extends BaseService<CustomerModel, CustomerModelExample> {
 
@@ -28,4 +31,10 @@ public interface CustomerService extends BaseService<CustomerModel, CustomerMode
      * @return
      */
     CustomerModel login(String loginName, String password);
+
+    /**
+     * 提交认证材料
+     * @param certificationDto
+     */
+    void certification(CertificationDto certificationDto) throws IOException;
 }
