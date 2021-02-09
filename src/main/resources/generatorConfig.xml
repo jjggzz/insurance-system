@@ -50,13 +50,13 @@
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
-        <table tableName="t_customer" domainObjectName="CustomerModel">
-            <property name="stateAction" value="false"/>
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-        </table>
-        <table tableName="t_customer_certification_info" domainObjectName="CustomerCertificationInfoModel">
-            <property name="stateAction" value="false"/>
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
-        </table>
+<!--        <table tableName="t_customer" domainObjectName="CustomerModel">-->
+<!--            <property name="stateAction" value="false"/>-->
+<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+<!--        </table>-->
+<!--        <table tableName="t_customer_certification_info" domainObjectName="CustomerCertificationInfoModel">-->
+<!--            <property name="stateAction" value="false"/>-->
+<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+<!--        </table>-->
     </context>
 </generatorConfiguration>

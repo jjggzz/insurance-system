@@ -11,7 +11,7 @@ create table t_customer (
     login_name varchar(16) unique not null comment '登陆名',
     password varchar(64) not null comment '密码',
     phone varchar(11) not null comment '电话号码',
-    certification boolean default 0 not null comment '是否认证通过 0未通过 1已通过',
+    certification int default 0 not null comment '是否认证通过 0未通过 1已提交 2已认证',
     certification_time datetime comment '认证时间',
     primary key(id)
 ) comment '客户表';

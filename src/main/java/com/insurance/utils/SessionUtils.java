@@ -9,4 +9,8 @@ public class SessionUtils {
     public static void setValue(HttpServletRequest request,String key,Object value) {
         request.getSession().setAttribute(key,value);
     }
+    public static void removeValue(HttpServletRequest request, String key) {
+        request.getSession().removeAttribute(key);
+    }
+
 }

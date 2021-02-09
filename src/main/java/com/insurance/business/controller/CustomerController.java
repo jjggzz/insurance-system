@@ -69,6 +69,16 @@ public class CustomerController extends BaseController {
     }
 
     /**
+     * 登出
+     * @return
+     */
+    @PostMapping("/logout")
+    public ResultEntity<LoginResponse> logout() {
+        SessionUtils.removeValue(getRequest(), CustomerConstant.CUSTOMER_INFO);
+        return ResultEntity.success();
+    }
+
+    /**
      * 提交认证材料
      * @param certificationRequest
      * @return
@@ -79,14 +89,17 @@ public class CustomerController extends BaseController {
         if (Objects.isNull(value)) {
             return ResultEntity.failure("用户未登陆");
         }
-        if (value.getCertification()) {
+        if (CustomerConstant.CERTIFICATION_2 == value.getCertification()) {
             return ResultEntity.failure("您已认证");
         }
         CertificationDto certificationDto = new CertificationDto();
         BeanUtils.copyProperties(certificationRequest,certificationDto,"birthday");
         certificationDto.setCustomerId(value.getId());
         certificationDto.setBirthday(DateUtils.detailDateParseToDate(certificationRequest.getBirthday()));
-        customerService.certification(certificationDto);
+        // 认证
+        CustomerModel certification = customerService.certification(certificationDto);
+        SessionUtils.setValue(getRequest(), CustomerConstant.CUSTOMER_INFO,certification);
+
         return ResultEntity.success();
     }
 

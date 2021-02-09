@@ -1,5 +1,6 @@
 package com.insurance.business.service.impl;
 
+import com.insurance.business.constant.CustomerConstant;
 import com.insurance.business.constant.FileConstant;
 import com.insurance.business.dto.CertificationDto;
 import com.insurance.business.mapper.CustomerModelMapper;
@@ -73,7 +74,7 @@ public class CustomerServiceImpl
 
     @Transactional
     @Override
-    public void certification(CertificationDto certificationDto) throws IOException {
+    public CustomerModel certification(CertificationDto certificationDto) throws IOException {
         // 身份证正面存储路径
         String identityPositivePath = FilenameUtils.concat(FileConstant.IDENTITY_POSITIVE_PATH,
                 IdUtils.getInstance().nextId() + "." + FilenameUtils.getExtension(certificationDto.getIdentityPositive().getOriginalFilename()));
@@ -100,10 +101,14 @@ public class CustomerServiceImpl
             dbCCI.setTakeIdentityImage(takeIdentityImagePath);
             customerCertificationInfoService.update(dbCCI);
         }
+        CustomerModel customerModel = selectByPrimaryKey(certificationDto.getCustomerId());
+        customerModel.setCertification(CustomerConstant.CERTIFICATION_1);
+        update(customerModel);
 
         FileUtils.copyToFile(certificationDto.getIdentityPositive().getInputStream(),new File(identityPositivePath));
         FileUtils.copyToFile(certificationDto.getIdentityPositive().getInputStream(),new File(identityReversePath));
         FileUtils.copyToFile(certificationDto.getIdentityPositive().getInputStream(),new File(takeIdentityImagePath));
+        return customerModel;
     }
 
 }

@@ -36,5 +36,5 @@ public interface CustomerService extends BaseService<CustomerModel, CustomerMode
      * 提交认证材料
      * @param certificationDto
      */
-    void certification(CertificationDto certificationDto) throws IOException;
+    CustomerModel certification(CertificationDto certificationDto) throws IOException;
 }
