@@ -2,13 +2,10 @@ package com.insurance.business.vo.request;
 
 import lombok.Data;
 
-/**
- * 注册请求体
- */
 @Data
-public class RegisterRequest {
+public class AddUserRequest {
+    private String userName;
     private String loginName;
     private String password;
-    private String phone;
-    private String verifyCode;
+    private Integer rule;
 }

@@ -26,7 +26,7 @@
 
         <!-- 配置连接数据信息 -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://47.105.41.180:3306/insurance?characterEncoding=utf8"
+                        connectionURL="jdbc:mysql://localhost:3306/insurance?characterEncoding=utf8"
                         userId="root" password="123456">
         </jdbcConnection>
 
@@ -58,5 +58,9 @@
 <!--            <property name="stateAction" value="false"/>-->
 <!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--        </table>-->
+            <table tableName="t_user" domainObjectName="UserModel">
+                <property name="stateAction" value="false"/>
+                <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+            </table>
     </context>
 </generatorConfiguration>
