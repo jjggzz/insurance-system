@@ -29,7 +29,7 @@ public class UserController extends BaseController {
         return result(addUserRequest,userService::addUser);
     }
 
-    @PostMapping("/update")
+    @PutMapping("/update")
     public ResultEntity<Void> updateUser(@RequestBody UpdateUserRequest updateUserRequest) throws Exception {
         return result(updateUserRequest,userService::updateUser);
     }
@@ -45,7 +45,7 @@ public class UserController extends BaseController {
     }
 
     @PostMapping("/login")
-    public ResultEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) throws Exception {
+    public ResultEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
         return userService.login(loginRequest,getRequest());
     }
 
