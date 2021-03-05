@@ -7,5 +7,8 @@ import lombok.Data;
  */
 @Data
 public class LoginResponse {
-    private String customerName;
+    private Long accessKey;
+    private String userName;
+    private String phone;
+    private Integer rule;
 }

@@ -5,7 +5,6 @@ import lombok.Data;
 
 @Data
 public class GetUserListRequest extends Page {
-
     private Integer rule;
     private String userName;
 }

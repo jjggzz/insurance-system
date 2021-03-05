@@ -3,16 +3,19 @@ package com.insurance.business.service.impl;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.insurance.business.constant.RuleEnum;
+import com.insurance.business.constant.UserConstant;
 import com.insurance.business.mapper.UserModelMapper;
 import com.insurance.business.model.UserModel;
 import com.insurance.business.model.UserModelExample;
 import com.insurance.business.service.UserService;
 import com.insurance.business.vo.request.AddUserRequest;
 import com.insurance.business.vo.request.GetUserListRequest;
+import com.insurance.business.vo.request.LoginRequest;
 import com.insurance.business.vo.request.UpdateUserRequest;
 import com.insurance.business.vo.response.GetUserListResponse;
+import com.insurance.business.vo.response.LoginResponse;
 import com.insurance.utils.IdUtils;
+import com.insurance.utils.SessionUtils;
 import com.springboot.simple.jdbc.service.impl.BaseServiceImpl;
 import com.springboot.simple.res.ResultEntity;
 import org.apache.commons.collections4.CollectionUtils;
@@ -21,6 +24,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -40,9 +45,18 @@ public class UserServiceImpl
 
     @Override
     public ResultEntity<Void> addUser(AddUserRequest addUserRequest) {
+        UserModelExample userModelExample = newExample();
+        userModelExample.createCriteria().andLoginNameEqualTo(addUserRequest.getLoginName());
+        List<UserModel> userModels = selectByExample(userModelExample);
+        if (CollectionUtils.isNotEmpty(userModels)) {
+            LOGGER.warn("{} 添加用户,用户已存在：loginName = {}","addUser",addUserRequest.getLoginName());
+            return ResultEntity.failure("用户已存在");
+        }
+
         UserModel userModel = newModel();
         BeanUtils.copyProperties(addUserRequest,userModel);
         userModel.setAccessKey(IdUtils.getInstance().nextId());
+        userModel.setInputTime(new Date());
         insert(userModel);
         return ResultEntity.success();
     }
@@ -56,6 +70,7 @@ public class UserServiceImpl
 
         List<UserModel> userModels = selectByExample(userModelExample);
         if (CollectionUtils.isEmpty(userModels)) {
+            LOGGER.warn("{} 修改用户,用户不存在：accessKey = {}","updateUser",updateUserRequest.getAccessKey());
             return ResultEntity.failure("该用户不存在");
         }
         UserModel userModel = userModels.get(0);
@@ -69,16 +84,15 @@ public class UserServiceImpl
     public ResultEntity<Void> deleteUserByAccessKey(Long accessKey) {
         UserModelExample userModelExample = newExample();
         userModelExample.createCriteria()
-                .andDeletedEqualTo(false)
                 .andAccessKeyEqualTo(accessKey);
         List<UserModel> userModels = selectByExample(userModelExample);
         if (CollectionUtils.isEmpty(userModels)) {
+            LOGGER.warn("{} 删除用户,用户不存在：accessKey = {}","deleteUserByAccessKey",accessKey);
             return ResultEntity.failure("该用户不存在");
         }
 
         UserModel userModel = userModels.get(0);
-        userModel.setDeleted(true);
-        update(userModel);
+        delete(userModel.getId());
         return ResultEntity.success();
     }
 
@@ -98,8 +112,7 @@ public class UserServiceImpl
         selectByExample(userModelExample);
         List<GetUserListResponse> list = userModels.stream().map(userModel -> {
             GetUserListResponse getUserListResponse = new GetUserListResponse();
-            BeanUtils.copyProperties(userModel,getUserListResponse,"rule");
-            getUserListResponse.setRule(RuleEnum.getNameByCode(userModel.getRule()));
+            BeanUtils.copyProperties(userModel,getUserListResponse);
             return getUserListResponse;
         }).collect(Collectors.toList());
 
@@ -108,5 +121,27 @@ public class UserServiceImpl
         pageInfo.setPageSize(userModels.getPageSize());
         pageInfo.setTotal(userModels.getTotal());
         return ResultEntity.success(pageInfo);
+    }
+
+    @Override
+    public ResultEntity<LoginResponse> login(LoginRequest loginRequest, HttpServletRequest request) {
+        UserModelExample userModelExample = newExample();
+        userModelExample.createCriteria()
+                .andDeletedEqualTo(false)
+                .andLoginNameEqualTo(loginRequest.getLoginName());
+        List<UserModel> userModels = selectByExample(userModelExample);
+        if (CollectionUtils.isEmpty(userModels)) {
+            return ResultEntity.failure("用户名或密码错误");
+        }
+        UserModel userModel = userModels.get(0);
+        if (!userModel.getPassword().equals(loginRequest.getPassword())) {
+            return ResultEntity.failure("用户名或密码错误");
+        }
+        // 登录成功
+        LoginResponse loginResponse = new LoginResponse();
+        BeanUtils.copyProperties(userModel,loginResponse);
+        SessionUtils.setValue(request, UserConstant.USER_INFO,userModel);
+        LOGGER.warn("{} 用户登录成功：accessKey = {}","login",userModel.getAccessKey());
+        return ResultEntity.success(loginResponse);
     }
 }

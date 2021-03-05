@@ -4,8 +4,10 @@ import com.github.pagehelper.PageInfo;
 import com.insurance.business.service.UserService;
 import com.insurance.business.vo.request.AddUserRequest;
 import com.insurance.business.vo.request.GetUserListRequest;
+import com.insurance.business.vo.request.LoginRequest;
 import com.insurance.business.vo.request.UpdateUserRequest;
 import com.insurance.business.vo.response.GetUserListResponse;
+import com.insurance.business.vo.response.LoginResponse;
 import com.springboot.simple.controller.BaseController;
 import com.springboot.simple.res.ResultEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 
 /**
- * 操作员管理
+ * 人员员管理
  */
 @RequestMapping("user")
 @RestController
@@ -40,6 +42,11 @@ public class UserController extends BaseController {
     @GetMapping("/list")
     public ResultEntity<PageInfo<GetUserListResponse>> getUserList(@RequestBody GetUserListRequest getUserListRequest) throws Exception {
         return result(getUserListRequest,userService::getUserList);
+    }
+
+    @PostMapping("/login")
+    public ResultEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) throws Exception {
+        return userService.login(loginRequest,getRequest());
     }
 
 }

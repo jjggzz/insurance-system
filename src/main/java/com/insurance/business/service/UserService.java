@@ -5,10 +5,14 @@ import com.insurance.business.model.UserModel;
 import com.insurance.business.model.UserModelExample;
 import com.insurance.business.vo.request.AddUserRequest;
 import com.insurance.business.vo.request.GetUserListRequest;
+import com.insurance.business.vo.request.LoginRequest;
 import com.insurance.business.vo.request.UpdateUserRequest;
 import com.insurance.business.vo.response.GetUserListResponse;
+import com.insurance.business.vo.response.LoginResponse;
 import com.springboot.simple.jdbc.service.BaseService;
 import com.springboot.simple.res.ResultEntity;
+
+import javax.servlet.http.HttpServletRequest;
 
 public interface UserService extends BaseService<UserModel, UserModelExample> {
 
@@ -19,4 +23,6 @@ public interface UserService extends BaseService<UserModel, UserModelExample> {
     ResultEntity<Void> deleteUserByAccessKey(Long accessKey);
 
      ResultEntity<PageInfo<GetUserListResponse>> getUserList(GetUserListRequest getUserListRequest);
+
+    ResultEntity<LoginResponse> login(LoginRequest loginRequest, HttpServletRequest request);
 }

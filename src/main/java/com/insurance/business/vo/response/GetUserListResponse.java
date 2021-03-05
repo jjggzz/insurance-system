@@ -8,5 +8,5 @@ public class GetUserListResponse {
     private String userName;
     private String loginName;
     private String password;
-    private String rule;
+    private Integer rule;
 }
