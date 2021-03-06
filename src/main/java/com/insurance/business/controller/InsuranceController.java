@@ -39,7 +39,7 @@ public class InsuranceController extends BaseController {
     }
 
     /**
-     * todo
+     * 修改保险
      * @param updateInsuranceRequest
      * @return
      * @throws Exception
@@ -61,7 +61,7 @@ public class InsuranceController extends BaseController {
     }
 
     /**
-     * todo
+     * 分页查询保险信息
      * @param getInsuranceListRequest
      * @return
      * @throws Exception

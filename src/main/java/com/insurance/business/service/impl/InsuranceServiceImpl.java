@@ -7,6 +7,7 @@ import com.insurance.business.mapper.InsuranceModelMapper;
 import com.insurance.business.model.InsuranceModel;
 import com.insurance.business.model.InsuranceModelExample;
 import com.insurance.business.service.InsuranceService;
+import com.insurance.business.service.UserService;
 import com.insurance.business.vo.request.AddInsuranceRequest;
 import com.insurance.business.vo.request.GetInsuranceListRequest;
 import com.insurance.business.vo.request.UpdateInsuranceRequest;
@@ -29,6 +30,9 @@ import java.util.stream.Collectors;
 public class InsuranceServiceImpl
         extends BaseServiceImpl<InsuranceModel, InsuranceModelMapper, InsuranceModelExample>
         implements InsuranceService {
+
+    @Resource
+    private UserService userService;
 
     @Resource
     @Override
@@ -105,6 +109,7 @@ public class InsuranceServiceImpl
         List<GetInsuranceListResponse> list = insuranceModels.stream().map(insuranceModel -> {
             GetInsuranceListResponse getInsuranceListResponse = new GetInsuranceListResponse();
             BeanUtils.copyProperties(insuranceModel, getInsuranceListResponse);
+            getInsuranceListResponse.setInputUserName(userService.selectByPrimaryKey(insuranceModel.getId()).getUserName());
             return getInsuranceListResponse;
         }).collect(Collectors.toList());
 
