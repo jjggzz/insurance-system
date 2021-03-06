@@ -1,11 +1,14 @@
 package com.insurance.business.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.insurance.business.constant.UserConstant;
+import com.insurance.business.model.UserModel;
 import com.insurance.business.service.InsuranceService;
 import com.insurance.business.vo.request.AddInsuranceRequest;
 import com.insurance.business.vo.request.GetInsuranceListRequest;
 import com.insurance.business.vo.request.UpdateInsuranceRequest;
 import com.insurance.business.vo.response.GetInsuranceListResponse;
+import com.insurance.utils.SessionUtils;
 import com.springboot.simple.controller.BaseController;
 import com.springboot.simple.res.ResultEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,13 +26,15 @@ public class InsuranceController extends BaseController {
     private InsuranceService insuranceService;
 
     /**
-     * todo
+     * 添加保险
      * @param addInsuranceRequest
      * @return
      * @throws Exception
      */
     @PostMapping("/add")
     public ResultEntity<Void> addInsurance(@RequestBody AddInsuranceRequest addInsuranceRequest) throws Exception {
+        UserModel userInfo = (UserModel) SessionUtils.getValue(getRequest(), UserConstant.USER_INFO);
+        addInsuranceRequest.setInputUserId(userInfo.getId());
         return result(addInsuranceRequest,insuranceService::addInsurance);
     }
 
@@ -45,7 +50,7 @@ public class InsuranceController extends BaseController {
     }
 
     /**
-     * todo
+     * 删除保险
      * @param accessKey
      * @return
      * @throws Exception

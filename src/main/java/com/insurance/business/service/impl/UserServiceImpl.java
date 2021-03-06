@@ -49,7 +49,6 @@ public class UserServiceImpl
         userModelExample.createCriteria().andLoginNameEqualTo(addUserRequest.getLoginName());
         List<UserModel> userModels = selectByExample(userModelExample);
         if (CollectionUtils.isNotEmpty(userModels)) {
-            LOGGER.warn("{} 添加用户,用户已存在：loginName = {}","addUser",addUserRequest.getLoginName());
             return ResultEntity.failure("用户已存在");
         }
 
@@ -58,6 +57,7 @@ public class UserServiceImpl
         userModel.setAccessKey(IdUtils.getInstance().nextId());
         userModel.setInputTime(new Date());
         insert(userModel);
+        LOGGER.warn("{} 添加用户,loginName = {}","addUser",addUserRequest.getLoginName());
         return ResultEntity.success();
     }
 
@@ -67,16 +67,15 @@ public class UserServiceImpl
         userModelExample.createCriteria()
                 .andDeletedEqualTo(false)
                 .andAccessKeyEqualTo(updateUserRequest.getAccessKey());
-
         List<UserModel> userModels = selectByExample(userModelExample);
         if (CollectionUtils.isEmpty(userModels)) {
-            LOGGER.warn("{} 修改用户,用户不存在：accessKey = {}","updateUser",updateUserRequest.getAccessKey());
             return ResultEntity.failure("该用户不存在");
         }
-        UserModel userModel = userModels.get(0);
 
+        UserModel userModel = userModels.get(0);
         BeanUtils.copyProperties(updateUserRequest,userModel);
         update(userModel);
+        LOGGER.warn("{} 修改用户,accessKey = {}","updateUser",userModel.getAccessKey());
         return ResultEntity.success();
     }
 
@@ -87,12 +86,12 @@ public class UserServiceImpl
                 .andAccessKeyEqualTo(accessKey);
         List<UserModel> userModels = selectByExample(userModelExample);
         if (CollectionUtils.isEmpty(userModels)) {
-            LOGGER.warn("{} 删除用户,用户不存在：accessKey = {}","deleteUserByAccessKey",accessKey);
             return ResultEntity.failure("该用户不存在");
         }
 
         UserModel userModel = userModels.get(0);
         delete(userModel.getId());
+        LOGGER.warn("{} 删除用户,accessKey = {}","deleteUserByAccessKey",userModel.getAccessKey());
         return ResultEntity.success();
     }
 
@@ -109,6 +108,13 @@ public class UserServiceImpl
         if (StringUtils.isNotBlank(getUserListRequest.getUserName())) {
             criteria.andUserNameLike("%" + getUserListRequest.getUserName() + "%");
         }
+        if (Objects.nonNull(getUserListRequest.getStartTime())) {
+            criteria.andInputTimeGreaterThanOrEqualTo(getUserListRequest.getStartTime());
+        }
+        if (Objects.nonNull(getUserListRequest.getEndTime())) {
+            criteria.andInputTimeLessThanOrEqualTo(getUserListRequest.getEndTime());
+        }
+
         selectByExample(userModelExample);
         List<GetUserListResponse> list = userModels.stream().map(userModel -> {
             GetUserListResponse getUserListResponse = new GetUserListResponse();
@@ -137,11 +143,12 @@ public class UserServiceImpl
         if (!userModel.getPassword().equals(loginRequest.getPassword())) {
             return ResultEntity.failure("用户名或密码错误");
         }
+
         // 登录成功
         LoginResponse loginResponse = new LoginResponse();
         BeanUtils.copyProperties(userModel,loginResponse);
         SessionUtils.setValue(request, UserConstant.USER_INFO,userModel);
-        LOGGER.warn("{} 用户登录成功：accessKey = {}","login",userModel.getAccessKey());
+        LOGGER.warn("{} 用户登录成功,accessKey = {}","login",userModel.getAccessKey());
         return ResultEntity.success(loginResponse);
     }
 }

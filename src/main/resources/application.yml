@@ -1,6 +1,7 @@
 server:
   port: 8080
 
+
 jdbc:
   master:
     driver-class-name: org.gjt.mm.mysql.Driver
@@ -11,3 +12,8 @@ jdbc:
 mybatis:
   mapper-locations: classpath:mybatis/*.xml
   type-aliases-package: com.insurance.business.model
+spring:
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
