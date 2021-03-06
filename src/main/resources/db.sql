@@ -19,3 +19,19 @@ create table t_user (
     primary key(id)
 ) comment '用户表';
 
+
+create table t_insurance (
+    id bigint auto_increment,
+    create_time datetime not null ,
+    modified_time datetime not null ,
+    deleted boolean default 0 not null ,
+    access_key bigint unique not null comment '业务id',
+    insurance_name varchar(64) not null comment '保险名',
+    insurance_type int not null comment '保险类别',
+    money decimal(18,2) not null comment '金额',
+    input_time datetime not null comment '录入时间',
+    input_user_id bigint not null comment '录入人',
+    status int not null default 0 comment '使用状态 0:未启用 1：已启用',
+    file_path varchar(255) comment '文件地址',
+    primary key(id)
+) comment '保险表';
