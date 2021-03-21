@@ -2,6 +2,7 @@ package com.insurance.business.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.insurance.business.constant.UserConstant;
+import com.insurance.business.model.UserModel;
 import com.insurance.business.service.UserService;
 import com.insurance.business.vo.request.AddUserRequest;
 import com.insurance.business.vo.request.GetUserListRequest;
@@ -9,12 +10,14 @@ import com.insurance.business.vo.request.LoginRequest;
 import com.insurance.business.vo.request.UpdateUserRequest;
 import com.insurance.business.vo.response.GetUserListResponse;
 import com.insurance.business.vo.response.LoginResponse;
+import com.insurance.business.vo.response.UserInfoResponse;
 import com.insurance.utils.SessionUtils;
 import com.springboot.simple.controller.BaseController;
 import com.springboot.simple.res.ResultEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 
 /**
  * 人员员管理
@@ -65,7 +68,7 @@ public class UserController extends BaseController {
      * @return
      * @throws Exception
      */
-    @GetMapping("/list")
+    @PostMapping("/list")
     public ResultEntity<PageInfo<GetUserListResponse>> getUserList(@RequestBody GetUserListRequest getUserListRequest) throws Exception {
         return result(getUserListRequest,userService::getUserList);
     }
@@ -78,6 +81,18 @@ public class UserController extends BaseController {
     @PostMapping("/login")
     public ResultEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
         return userService.login(loginRequest,getRequest());
+    }
+
+    @GetMapping("/getInfo")
+    public ResultEntity<UserInfoResponse> getInfo(Long accessKey) {
+        System.out.println(accessKey);
+        UserModel userInfo = (UserModel) SessionUtils.getValue(getRequest(), UserConstant.USER_INFO);
+        UserInfoResponse userInfoResponse = new UserInfoResponse();
+        userInfoResponse.setAccessKey(userInfo.getAccessKey());
+        userInfoResponse.setPhone(userInfo.getPhone());
+        userInfoResponse.setUserName(userInfo.getUserName());
+        userInfoResponse.setRule(Collections.singletonList(userInfo.getRule()));
+        return ResultEntity.success(userInfoResponse);
     }
 
     /**

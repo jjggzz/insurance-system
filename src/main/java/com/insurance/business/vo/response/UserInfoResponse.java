@@ -4,18 +4,13 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
-import java.math.BigDecimal;
-import java.util.Date;
+import java.util.List;
 
 @Data
-public class GetInsuranceListResponse {
-
+public class UserInfoResponse {
     @JsonSerialize(using = ToStringSerializer.class)
     private Long accessKey;
-    private String insuranceName;
-    private Integer insuranceType;
-    private BigDecimal money;
-    private String inputUserName;
-    private Date inputTime;
-    private Integer status;
+    private String userName;
+    private String phone;
+    private List<Integer> rule;
 }

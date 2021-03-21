@@ -66,7 +66,7 @@ public class InsuranceController extends BaseController {
      * @return
      * @throws Exception
      */
-    @GetMapping("/list")
+    @PostMapping("/list")
     public ResultEntity<PageInfo<GetInsuranceListResponse>> getInsuranceList(@RequestBody GetInsuranceListRequest getInsuranceListRequest) throws Exception {
         return result(getInsuranceListRequest,insuranceService::getInsuranceList);
     }

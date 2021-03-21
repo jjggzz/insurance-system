@@ -66,7 +66,7 @@ public class InsuranceServiceImpl
         BeanUtils.copyProperties(updateInsuranceRequest,insuranceModel);
         update(insuranceModel);
         LOGGER.warn("{} 修改保险,accessKey = {}","updateInsurance",insuranceModel.getAccessKey());
-        return null;
+        return ResultEntity.success();
     }
 
     @Override
@@ -98,6 +98,9 @@ public class InsuranceServiceImpl
         if (Objects.nonNull(getInsuranceListRequest.getInsuranceType())) {
             criteria.andInsuranceTypeEqualTo(getInsuranceListRequest.getInsuranceType());
         }
+        if (Objects.nonNull(getInsuranceListRequest.getStatus())) {
+            criteria.andStatusEqualTo(getInsuranceListRequest.getStatus());
+        }
         if (Objects.nonNull(getInsuranceListRequest.getStartTime())) {
             criteria.andInputTimeGreaterThanOrEqualTo(getInsuranceListRequest.getStartTime());
         }
@@ -109,7 +112,7 @@ public class InsuranceServiceImpl
         List<GetInsuranceListResponse> list = insuranceModels.stream().map(insuranceModel -> {
             GetInsuranceListResponse getInsuranceListResponse = new GetInsuranceListResponse();
             BeanUtils.copyProperties(insuranceModel, getInsuranceListResponse);
-            getInsuranceListResponse.setInputUserName(userService.selectByPrimaryKey(insuranceModel.getId()).getUserName());
+            getInsuranceListResponse.setInputUserName(userService.selectByPrimaryKey(insuranceModel.getInputUserId()).getUserName());
             return getInsuranceListResponse;
         }).collect(Collectors.toList());
 

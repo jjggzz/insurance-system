@@ -55,7 +55,12 @@
 <!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
 <!--        </table>-->
 
-        <table tableName="t_insurance" domainObjectName="InsuranceModel">
+<!--        <table tableName="t_insurance" domainObjectName="InsuranceModel">-->
+<!--            <property name="stateAction" value="false"/>-->
+<!--            <generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+<!--        </table>-->
+
+        <table tableName="t_policy" domainObjectName="PolicyModel">
             <property name="stateAction" value="false"/>
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
