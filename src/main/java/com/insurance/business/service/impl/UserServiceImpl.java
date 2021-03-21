@@ -14,6 +14,7 @@ import com.insurance.business.vo.request.LoginRequest;
 import com.insurance.business.vo.request.UpdateUserRequest;
 import com.insurance.business.vo.response.GetUserListResponse;
 import com.insurance.business.vo.response.LoginResponse;
+import com.insurance.business.vo.response.UserAccessKeyAndNameListResponse;
 import com.insurance.utils.IdUtils;
 import com.insurance.utils.SessionUtils;
 import com.springboot.simple.jdbc.service.impl.BaseServiceImpl;
@@ -150,5 +151,28 @@ public class UserServiceImpl
         SessionUtils.setValue(request, UserConstant.USER_INFO,userModel);
         LOGGER.warn("{} 用户登录成功,accessKey = {}","login",userModel.getAccessKey());
         return ResultEntity.success(loginResponse);
+    }
+
+    @Override
+    public UserModel selectByAccessKey(Long accessKey) {
+        UserModelExample userModelExample = newExample();
+        userModelExample.createCriteria()
+                .andDeletedEqualTo(false)
+                .andAccessKeyEqualTo(accessKey);
+        List<UserModel> userModels = selectByExample(userModelExample);
+        return CollectionUtils.isEmpty(userModels)? null : userModels.get(0);
+    }
+
+    @Override
+    public List<UserAccessKeyAndNameListResponse> getAccessKeyAndNameList() {
+        UserModelExample userModelExample = newExample();
+        userModelExample.createCriteria()
+                .andDeletedEqualTo(false);
+        List<UserModel> userModels = selectByExample(userModelExample);
+        return userModels.stream().map(userModel -> {
+            UserAccessKeyAndNameListResponse userAccessKeyAndNameListResponse = new UserAccessKeyAndNameListResponse();
+            BeanUtils.copyProperties(userModel, userAccessKeyAndNameListResponse);
+            return userAccessKeyAndNameListResponse;
+        }).collect(Collectors.toList());
     }
 }

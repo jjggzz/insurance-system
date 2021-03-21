@@ -10,6 +10,7 @@ import com.insurance.business.vo.request.LoginRequest;
 import com.insurance.business.vo.request.UpdateUserRequest;
 import com.insurance.business.vo.response.GetUserListResponse;
 import com.insurance.business.vo.response.LoginResponse;
+import com.insurance.business.vo.response.UserAccessKeyAndNameListResponse;
 import com.insurance.business.vo.response.UserInfoResponse;
 import com.insurance.utils.SessionUtils;
 import com.springboot.simple.controller.BaseController;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * 人员员管理
@@ -91,7 +93,7 @@ public class UserController extends BaseController {
         userInfoResponse.setAccessKey(userInfo.getAccessKey());
         userInfoResponse.setPhone(userInfo.getPhone());
         userInfoResponse.setUserName(userInfo.getUserName());
-        userInfoResponse.setRule(Collections.singletonList(userInfo.getRule()));
+        userInfoResponse.setRules(Collections.singletonList(userInfo.getRule()));
         return ResultEntity.success(userInfoResponse);
     }
 
@@ -103,6 +105,12 @@ public class UserController extends BaseController {
     public ResultEntity<Void> logout() {
         SessionUtils.removeValue(getRequest(), UserConstant.USER_INFO);
         return ResultEntity.success();
+    }
+
+    @GetMapping("/baseData")
+    public ResultEntity<List<UserAccessKeyAndNameListResponse>> getAccessKeyAndNameList() {
+        List<UserAccessKeyAndNameListResponse> list = userService.getAccessKeyAndNameList();
+        return ResultEntity.success(list);
     }
 
 }

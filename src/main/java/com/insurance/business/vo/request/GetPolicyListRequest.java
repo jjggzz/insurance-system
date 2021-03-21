@@ -7,8 +7,7 @@ import java.util.Date;
 
 @Data
 public class GetPolicyListRequest extends Page {
-    private Integer rule;
-    private String userName;
+    private String policyName;
     private Date startTime;
     private Date endTime;
 }

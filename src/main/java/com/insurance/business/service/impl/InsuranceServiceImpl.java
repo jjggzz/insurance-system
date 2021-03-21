@@ -12,6 +12,7 @@ import com.insurance.business.vo.request.AddInsuranceRequest;
 import com.insurance.business.vo.request.GetInsuranceListRequest;
 import com.insurance.business.vo.request.UpdateInsuranceRequest;
 import com.insurance.business.vo.response.GetInsuranceListResponse;
+import com.insurance.business.vo.response.InsuranceAccessKeyAndNameListResponse;
 import com.insurance.utils.IdUtils;
 import com.springboot.simple.jdbc.service.impl.BaseServiceImpl;
 import com.springboot.simple.res.ResultEntity;
@@ -122,5 +123,28 @@ public class InsuranceServiceImpl
         pageInfo.setPageSize(insuranceModels.getPageSize());
         pageInfo.setTotal(insuranceModels.getTotal());
         return ResultEntity.success(pageInfo);
+    }
+
+    @Override
+    public InsuranceModel selectByAccessKey(Long accessKey) {
+        InsuranceModelExample insuranceModelExample = newExample();
+        insuranceModelExample.createCriteria()
+                .andDeletedEqualTo(false)
+                .andAccessKeyEqualTo(accessKey);
+        List<InsuranceModel> insuranceModels = selectByExample(insuranceModelExample);
+        return CollectionUtils.isEmpty(insuranceModels) ? null : insuranceModels.get(0);
+    }
+
+    @Override
+    public List<InsuranceAccessKeyAndNameListResponse> getAccessKeyAndNameList() {
+        InsuranceModelExample insuranceModelExample = newExample();
+        insuranceModelExample.createCriteria()
+                .andDeletedEqualTo(false);
+        List<InsuranceModel> insuranceModels = selectByExample(insuranceModelExample);
+        return insuranceModels.stream().map(insuranceModel -> {
+            InsuranceAccessKeyAndNameListResponse insuranceAccessKeyAndNameListResponse = new InsuranceAccessKeyAndNameListResponse();
+            BeanUtils.copyProperties(insuranceModel,insuranceAccessKeyAndNameListResponse);
+            return insuranceAccessKeyAndNameListResponse;
+        }).collect(Collectors.toList());
     }
 }

@@ -4,13 +4,10 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
-public class UserInfoResponse {
+public class UserAccessKeyAndNameListResponse {
     @JsonSerialize(using = ToStringSerializer.class)
     private Long accessKey;
     private String userName;
-    private String phone;
-    private List<Integer> rules;
+
 }

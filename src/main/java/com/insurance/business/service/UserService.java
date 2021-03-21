@@ -9,10 +9,12 @@ import com.insurance.business.vo.request.LoginRequest;
 import com.insurance.business.vo.request.UpdateUserRequest;
 import com.insurance.business.vo.response.GetUserListResponse;
 import com.insurance.business.vo.response.LoginResponse;
+import com.insurance.business.vo.response.UserAccessKeyAndNameListResponse;
 import com.springboot.simple.jdbc.service.BaseService;
 import com.springboot.simple.res.ResultEntity;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 public interface UserService extends BaseService<UserModel, UserModelExample> {
 
@@ -25,4 +27,9 @@ public interface UserService extends BaseService<UserModel, UserModelExample> {
      ResultEntity<PageInfo<GetUserListResponse>> getUserList(GetUserListRequest getUserListRequest);
 
     ResultEntity<LoginResponse> login(LoginRequest loginRequest, HttpServletRequest request);
+
+    UserModel selectByAccessKey(Long accessKey);
+
+    List<UserAccessKeyAndNameListResponse> getAccessKeyAndNameList();
+
 }

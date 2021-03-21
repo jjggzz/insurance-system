@@ -8,12 +8,14 @@ import com.insurance.business.vo.request.AddInsuranceRequest;
 import com.insurance.business.vo.request.GetInsuranceListRequest;
 import com.insurance.business.vo.request.UpdateInsuranceRequest;
 import com.insurance.business.vo.response.GetInsuranceListResponse;
+import com.insurance.business.vo.response.InsuranceAccessKeyAndNameListResponse;
 import com.insurance.utils.SessionUtils;
 import com.springboot.simple.controller.BaseController;
 import com.springboot.simple.res.ResultEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 保险管理
@@ -69,6 +71,12 @@ public class InsuranceController extends BaseController {
     @PostMapping("/list")
     public ResultEntity<PageInfo<GetInsuranceListResponse>> getInsuranceList(@RequestBody GetInsuranceListRequest getInsuranceListRequest) throws Exception {
         return result(getInsuranceListRequest,insuranceService::getInsuranceList);
+    }
+
+    @GetMapping("/baseData")
+    public ResultEntity<List<InsuranceAccessKeyAndNameListResponse>> getAccessKeyAndNameList() {
+        List<InsuranceAccessKeyAndNameListResponse> list = insuranceService.getAccessKeyAndNameList();
+        return ResultEntity.success(list);
     }
 
 
