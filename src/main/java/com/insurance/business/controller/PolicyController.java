@@ -24,7 +24,7 @@ public class PolicyController extends BaseController {
         return result(addPolicyRequest,policyService::addPolicy);
     }
 
-    @PostMapping("/delete/{accessKey}")
+    @DeleteMapping("/delete/{accessKey}")
     public ResultEntity<Void> deletePolicy(@PathVariable("accessKey") Long accessKey) throws Exception {
         return result(accessKey,policyService::deletePolicyByAccessKey);
     }

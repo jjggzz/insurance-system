@@ -114,10 +114,16 @@ public class InsuranceServiceImpl
         List<GetInsuranceListResponse> list = insuranceModels.stream().map(insuranceModel -> {
             GetInsuranceListResponse getInsuranceListResponse = new GetInsuranceListResponse();
             BeanUtils.copyProperties(insuranceModel, getInsuranceListResponse);
-            UserModel userModel = userService.selectByPrimaryKey(insuranceModel.getInputUserId());
-            if (Objects.nonNull(userModel)) {
-                getInsuranceListResponse.setInputUserName(userModel.getUserName());
+            String userName = "";
+            if (insuranceModel.getInputUserId() == 0) {
+                userName = "admin";
+            } else {
+                UserModel userModel = userService.selectByPrimaryKey(insuranceModel.getInputUserId());
+                if (Objects.nonNull(userModel)) {
+                    userName = userModel.getUserName();
+                }
             }
+            getInsuranceListResponse.setInputUserName(userName);
             return getInsuranceListResponse;
         }).collect(Collectors.toList());
 
