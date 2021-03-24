@@ -6,6 +6,7 @@ import com.github.pagehelper.PageInfo;
 import com.insurance.business.mapper.InsuranceModelMapper;
 import com.insurance.business.model.InsuranceModel;
 import com.insurance.business.model.InsuranceModelExample;
+import com.insurance.business.model.UserModel;
 import com.insurance.business.service.InsuranceService;
 import com.insurance.business.service.UserService;
 import com.insurance.business.vo.request.AddInsuranceRequest;
@@ -113,7 +114,10 @@ public class InsuranceServiceImpl
         List<GetInsuranceListResponse> list = insuranceModels.stream().map(insuranceModel -> {
             GetInsuranceListResponse getInsuranceListResponse = new GetInsuranceListResponse();
             BeanUtils.copyProperties(insuranceModel, getInsuranceListResponse);
-            getInsuranceListResponse.setInputUserName(userService.selectByPrimaryKey(insuranceModel.getInputUserId()).getUserName());
+            UserModel userModel = userService.selectByPrimaryKey(insuranceModel.getInputUserId());
+            if (Objects.nonNull(userModel)) {
+                getInsuranceListResponse.setInputUserName(userModel.getUserName());
+            }
             return getInsuranceListResponse;
         }).collect(Collectors.toList());
 

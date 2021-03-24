@@ -4,7 +4,10 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.insurance.business.mapper.PolicyModelMapper;
-import com.insurance.business.model.*;
+import com.insurance.business.model.InsuranceModel;
+import com.insurance.business.model.PolicyModel;
+import com.insurance.business.model.PolicyModelExample;
+import com.insurance.business.model.UserModel;
 import com.insurance.business.service.InsuranceService;
 import com.insurance.business.service.PolicyService;
 import com.insurance.business.service.UserService;
@@ -103,6 +106,16 @@ public class PolicyServiceImpl
         UserModel insureUser = userService.selectByAccessKey(updatePolicyRequest.getInsureUserAccessKey());
         UserModel benefitUser = userService.selectByAccessKey(updatePolicyRequest.getBenefitUserAccessKey());
         InsuranceModel insuranceModel = insuranceService.selectByAccessKey(updatePolicyRequest.getInsuranceAccessKey());
+        // 校验数据
+        if (Objects.isNull(insureUser)) {
+            return ResultEntity.failure("投保人不存在");
+        }
+        if (Objects.isNull(benefitUser)) {
+            return ResultEntity.failure("受益人不存在");
+        }
+        if (Objects.isNull(insuranceModel)) {
+            return ResultEntity.failure("该保险不存在");
+        }
         policyModel.setInsureUserId(insureUser.getId());
         policyModel.setBenefitUserId(benefitUser.getId());
         policyModel.setInsuranceId(insuranceModel.getId());
@@ -144,14 +157,18 @@ public class PolicyServiceImpl
             UserModel insureUser = userService.selectByPrimaryKey(policyModel.getInsureUserId());
             UserModel benefitUser = userService.selectByPrimaryKey(policyModel.getBenefitUserId());
             InsuranceModel insuranceModel = insuranceService.selectByPrimaryKey(policyModel.getInsuranceId());
-
-            getPolicyListResponse.setBenefitUserAccessKey(benefitUser.getAccessKey());
-            getPolicyListResponse.setBenefitUserName(benefitUser.getUserName());
-            getPolicyListResponse.setInsureUserAccessKey(insureUser.getAccessKey());
-            getPolicyListResponse.setInsureUserName(insureUser.getUserName());
-            getPolicyListResponse.setInsuranceAccessKey(insuranceModel.getAccessKey());
-            getPolicyListResponse.setInsuranceName(insuranceModel.getInsuranceName());
-
+            if (Objects.nonNull(insureUser)) {
+                getPolicyListResponse.setInsureUserAccessKey(insureUser.getAccessKey());
+                getPolicyListResponse.setInsureUserName(insureUser.getUserName());
+            }
+            if (Objects.nonNull(benefitUser)) {
+                getPolicyListResponse.setBenefitUserAccessKey(benefitUser.getAccessKey());
+                getPolicyListResponse.setBenefitUserName(benefitUser.getUserName());
+            }
+            if (Objects.nonNull(insuranceModel)) {
+                getPolicyListResponse.setInsuranceAccessKey(insuranceModel.getAccessKey());
+                getPolicyListResponse.setInsuranceName(insuranceModel.getInsuranceName());
+            }
             return getPolicyListResponse;
         }).collect(Collectors.toList());
 
